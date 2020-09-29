@@ -1,0 +1,171 @@
+// importing fonts
+@import './fonts.scss';
+
+// re-assign bulma variables before import!
+// theme colors
+$primary: #009ec1;
+$info: #35347e;
+$warning: #ffcc00;
+$light: #f4f4f4;
+$footer-background-color: $primary;
+$footer-color: white;
+
+// theme fonts
+$family-sans-serif: Lato, sans-serif;
+
+// theme other settings
+$radius: 10px;
+$radius-small: 10px;
+$body-line-height: 1.2;
+
+// re-assign bulma variables before import!
+// importing bulma
+@import '../../node_modules/bulma/sass/utilities/initial-variables.sass';
+@import '../../node_modules/bulma/bulma.sass';
+
+// adjusting font-size for rem
+html {
+  font-size: 18px;
+}
+
+.hero-bg-desktop {
+  background: url('../images/hero_background.png') no-repeat;
+  background-size: cover;
+  background-position: center bottom;
+  @media screen and (max-width: 1023px) {
+    background-position: 35% bottom;
+  }
+}
+
+.notice-icon {
+  height: 64px;
+}
+
+.pointer-icon {
+  width: 100%;
+  transform: translateY(-100%);
+}
+
+.logo-icon {
+  height: 49px;
+  &-lg {
+    height: 61px;
+  }
+  &-sm {
+    height: 33px;
+  }
+}
+
+// helpers
+
+.mobile-input {
+  background-color: #e5e5e5;
+  border-width: 0;
+}
+
+.mobile-form-spacer {
+  height: 60px;
+  border-bottom: 7px solid $primary;
+}
+
+.desktop-form {
+  margin-left: 0.5rem !important;
+  margin-right: 3rem !important;
+  @media screen and (max-width: 1215px) {
+    & input {
+      font-size: 0.9rem;
+      padding-left: 0.5rem;
+    }
+    margin-left: 0rem !important;
+    margin-right: 0rem !important;
+  }
+}
+
+.extra-padding {
+  padding-top: 132px;
+  padding-bottom: 132px;
+  @media screen and (max-width: 768px) {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+}
+
+.plus-mark {
+  position: relative;
+  margin-bottom: 0.5em !important;
+  &::after {
+    content: url(../images/plus.svg);
+    position: absolute;
+    left: -1.4em;
+    top: 0em;
+  }
+}
+
+.undercut {
+  display: flex;
+  flex-flow: column nowrap;
+  position: relative;
+  @media screen and (max-width: 768px) {
+    margin-left: 2rem;
+  }
+  &__check {
+    position: absolute;
+    margin: 0;
+    left: 0.02px;
+    top: 0.25em;
+    height: 1.7em;
+    line-height: $body-line-height;
+    font-size: 1em;
+    width: 100%;
+    opacity: 0;
+    &:hover + .undercut__name {
+      cursor: pointer;
+      color: $primary;
+    }
+    &:checked ~ .undercut__content {
+      padding-top: 1.5rem;
+      height: auto;
+    }
+    &:checked ~ .undercut__name::after {
+      transform: rotate(90deg);
+    }
+  }
+  &__name {
+    display: block;
+    height: 1.5em;
+    &::after {
+      content: '';
+      position: absolute;
+      left: -1.6em;
+      top: 0.2em;
+      width: 0;
+      height: 0;
+      border-top: 0.5em solid transparent;
+      border-bottom: 0.5em solid transparent;
+      border-left: 0.5em solid $warning;
+      transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+      @media screen and (max-width: 768px) {
+        left: -1.2em;
+      }
+    }
+  }
+  &__content {
+    display: block;
+    overflow: hidden;
+    height: 0px;
+  }
+}
+
+// test misc
+.bgred {
+  background: rgba(255, 0, 0, 0.5);
+}
+.bggreen {
+  background: rgba(0, 128, 0, 0.5);
+}
+.bgblue {
+  background: rgba(0, 0, 255, 0.5);
+}
+.bgyellow {
+  background: rgba(255, 255, 0, 0.5);
+}
