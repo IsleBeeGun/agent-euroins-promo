@@ -9,11 +9,15 @@ $warning: #ffcc00;
 $light: #f4f4f4;
 $footer-background-color: $primary;
 $footer-color: white;
+$input-hover-border-color: $info;
+$input-focus-border-color: $info;
+$input-focus-box-shadow-color: rgba($info, 0.3);
 
 // theme fonts
 $family-sans-serif: Lato, sans-serif;
 
 // theme other settings
+$input-focus-box-shadow-size: 0 0 0 0.14em;
 $radius: 10px;
 $radius-small: 10px;
 $body-line-height: 1.2;
@@ -60,7 +64,10 @@ html {
 
 .mobile-input {
   background-color: #e5e5e5;
-  border-width: 0;
+  border-color: #e5e5e5;
+  &:focus {
+    background-color: $light;
+  }
 }
 
 .mobile-form-spacer {
@@ -72,12 +79,21 @@ html {
   margin-left: 0.5rem !important;
   margin-right: 3rem !important;
   @media screen and (max-width: 1215px) {
-    & input {
+    & input,
+    span {
+      font-size: 0.75rem !important;
+    }
+  }
+  @media screen and (max-width: 1407px) {
+    & input,
+    span {
       font-size: 0.9rem;
+    }
+    & input {
       padding-left: 0.5rem;
     }
     margin-left: 0rem !important;
-    margin-right: 0rem !important;
+    margin-right: 1rem !important;
   }
 }
 
@@ -170,11 +186,11 @@ input[type='number'] {
 // forms
 
 .fieldValid {
-  color: green;
+  background-color: lighten(hsl(141, 71%, 48%), 30%) !important;
 }
 
 .fieldInvalid {
-  color: red;
+  background-color: lighten($warning, 30%) !important;
 }
 
 // test misc
