@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "bulma": "^0.9.0",
-    "inputmask": "^5.0.5"
+    "imask": "^6.0.5"
   }
 }

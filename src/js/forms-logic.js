@@ -1,9 +1,19 @@
 // input mask plugin
-import Inputmask from 'inputmask';
+import IMask from 'imask';
 
-const inputMaskPhone = new Inputmask('+7 (999) 999-99-99');
-const inputMaskDayMonth = new Inputmask('9{1,2}');
-const inputMaskYear = new Inputmask('9999');
+let inputMaskPhone;
+const inputMaskPhoneOptions = {
+  mask: '+7 (000) 000-00-00',
+};
+let inputMaskDay;
+let inputMaskMonth;
+const inputMaskDayMonthOptions = {
+  mask: '00',
+};
+let inputMaskYear;
+const inputMaskYearOptions = {
+  mask: '0000',
+};
 
 // Regular Expressions
 const REGEX_PHONE = /^\+\d{1,2}\s+?\(\d{3,5}\)\s+?\d{1,3}-\d{2}-\d{2}$/;
@@ -62,7 +72,7 @@ const validateField = event => {
       ? setCssValid(target)
       : setCssInvalid(target);
     // input mask
-    inputMaskPhone.mask(target);
+    inputMaskPhone = IMask(target, inputMaskPhoneOptions);
   }
   if (target.name == 'day') {
     // color validation
@@ -88,10 +98,10 @@ const validateField = event => {
       REGEX_MONTH.test(month.value) ? colorSuccess(month) : colorWarning(month);
     }
     // input mask
-    inputMaskDayMonth.mask(target);
+    inputMaskDay = IMask(target, inputMaskDayMonthOptions);
     // reset if wrong
     if (+target.value <= 0 || +target.value > 31) {
-      target.value = '';
+      inputMaskDay.value = '';
     }
   }
   if (target.name == 'month') {
@@ -119,10 +129,10 @@ const validateField = event => {
       REGEX_DAY.test(day.value) ? colorSuccess(day) : colorWarning(day);
     }
     // input mask
-    inputMaskDayMonth.mask(target);
+    inputMaskMonth = IMask(target, inputMaskDayMonthOptions);
     // reset if wrong
     if (+target.value <= 0 || +target.value > 12) {
-      target.value = '';
+      inputMaskMonth.value = '';
     }
   }
   if (target.name == 'year') {
@@ -144,14 +154,11 @@ const validateField = event => {
       REGEX_DAY.test(day.value) ? colorSuccess(day) : colorWarning(day);
     }
     // input mask
-    inputMaskYear.mask(target);
+    inputMaskYear = IMask(target, inputMaskYearOptions);
     // reset if wrong
-    if (
-      +target.value <= 1917 ||
-      +target.value > new Date().getFullYear() - 18
-    ) {
+    if (+target.value < 1 || +target.value > new Date().getFullYear() - 18) {
       setCssInvalid(target);
-      target.value = '';
+      inputMaskYear.value = '';
     }
   }
 };
@@ -162,22 +169,31 @@ export const handleFormByID = id => {
   // -- Name handling
   let name = form.elements.namedItem('name');
   name.addEventListener('input', validateField);
+  name.addEventListener('blur', validateField);
   // -- Phone handling
   let phone = form.elements.namedItem('phone');
   phone.addEventListener('input', validateField);
+  phone.addEventListener('blur', validateField);
   // -- Day handling
   let day = form.elements.namedItem('day');
   day.addEventListener('input', validateField);
+  day.addEventListener('blur', validateField);
   // -- Month handling
   let month = form.elements.namedItem('month');
   month.addEventListener('input', validateField);
+  month.addEventListener('blur', validateField);
   // -- Year handling
   let year = form.elements.namedItem('year');
   year.addEventListener('input', validateField);
+  year.addEventListener('blur', validateField);
   // - Handling submit action
   form.addEventListener('submit', event => {
     event.preventDefault();
-    if (!REGEX_NAME.test(name.value) || !REGEX_PHONE.test(phone.value)) {
+    if (
+      !REGEX_NAME.test(name.value) ||
+      !REGEX_PHONE.test(phone.value) ||
+      !REGEX_YEAR.test(year.value)
+    ) {
       if (!REGEX_NAME.test(name.value)) {
         name.focus();
         if (name.nextElementSibling) {
@@ -201,6 +217,20 @@ export const handleFormByID = id => {
             'has-text-success'
           );
           phone.nextElementSibling.children[0].classList.add(
+            'fa-exclamation-triangle',
+            'has-text-danger'
+          );
+        }
+      }
+      if (!REGEX_YEAR.test(year.value)) {
+        year.focus();
+        if (year.nextElementSibling) {
+          year.nextElementSibling.classList.remove('is-invisible');
+          year.nextElementSibling.children[0].classList.remove(
+            'fa-check',
+            'has-text-success'
+          );
+          year.nextElementSibling.children[0].classList.add(
             'fa-exclamation-triangle',
             'has-text-danger'
           );

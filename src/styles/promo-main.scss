@@ -6,6 +6,7 @@
 $primary: #009ec1;
 $info: #35347e;
 $warning: #ffcc00;
+$success: hsl(141, 71%, 48%);
 $light: #f4f4f4;
 $footer-background-color: $primary;
 $footer-color: white;
@@ -186,11 +187,13 @@ input[type='number'] {
 // forms
 
 .fieldValid {
-  background-color: lighten(hsl(141, 71%, 48%), 30%) !important;
+  background-color: lighten($success, 30%) !important;
+  border-color: $success;
 }
 
 .fieldInvalid {
   background-color: lighten($warning, 30%) !important;
+  border-color: $warning;
 }
 
 // test misc
