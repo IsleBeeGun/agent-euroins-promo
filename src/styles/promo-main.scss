@@ -23,6 +23,9 @@ $radius: 10px;
 $radius-small: 10px;
 $body-line-height: 1.2;
 
+// non-bulma variables
+$transition: 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+
 // re-assign bulma variables before import!
 // importing bulma
 @import '../../node_modules/bulma/sass/utilities/initial-variables.sass';
@@ -160,7 +163,7 @@ html {
       border-top: 0.5em solid transparent;
       border-bottom: 0.5em solid transparent;
       border-left: 0.5em solid $warning;
-      transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+      transition: transform $transition;
       @media screen and (max-width: 768px) {
         left: -1.2em;
       }
@@ -194,6 +197,45 @@ input[type='number'] {
 .fieldInvalid {
   background-color: lighten($warning, 30%) !important;
   border-color: $warning;
+}
+
+// burger menu
+
+#burger {
+  z-index: 2;
+  cursor: pointer;
+  transition: transform $transition;
+}
+.burger {
+  &-active {
+    transform: rotate(90deg);
+  }
+}
+
+#burger-links {
+  position: absolute;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  top: 0;
+  right: -1.5rem;
+  width: 100vw;
+  height: 60vh;
+  background-color: $info;
+  transform-origin: top right;
+  border-radius: $radius;
+  transition: transform $transition;
+  box-shadow: 0px 15px 10px -15px #111;
+}
+.burger-links {
+  &-visible {
+    transform: scale(1);
+  }
+  &-hidden {
+    transform: scale(0);
+  }
 }
 
 // test misc

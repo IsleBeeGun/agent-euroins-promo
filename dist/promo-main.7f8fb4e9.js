@@ -5239,9 +5239,24 @@ require("../styles/promo-main.scss");
 
 var _formsLogic = require("./forms-logic");
 
+//import '../js/menu';
 // Setup forms
 var formDesktop = (0, _formsLogic.handleFormByID)('form-desktop');
 var formMobile = (0, _formsLogic.handleFormByID)('form-mobile');
+var burger = document.querySelector('#burger');
+burger.addEventListener('click', function () {
+  var links = document.querySelector('#burger-links');
+
+  if (links.classList.contains('burger-links-hidden')) {
+    links.classList.remove('burger-links-hidden');
+    links.classList.add('burger-links-visible');
+    burger.classList.add('burger-active');
+  } else {
+    links.classList.remove('burger-links-visible');
+    links.classList.add('burger-links-hidden');
+    burger.classList.remove('burger-active');
+  }
+});
 },{"../styles/promo-main.scss":"styles/promo-main.scss","./forms-logic":"js/forms-logic.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -5270,7 +5285,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55868" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52053" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

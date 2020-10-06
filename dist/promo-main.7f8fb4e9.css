@@ -10002,7 +10002,7 @@ html {
   border-top: 0.5em solid transparent;
   border-bottom: 0.5em solid transparent;
   border-left: 0.5em solid #ffcc00;
-  transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+  transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
 }
 @media screen and (max-width: 768px) {
   .undercut__name::after {
@@ -10036,6 +10036,41 @@ input[type=number] {
 .fieldInvalid {
   background-color: #ffeb99 !important;
   border-color: #ffcc00;
+}
+
+#burger {
+  z-index: 2;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.burger-active {
+  transform: rotate(90deg);
+}
+
+#burger-links {
+  position: absolute;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  top: 0;
+  right: -1.5rem;
+  width: 100vw;
+  height: 60vh;
+  background-color: #35347e;
+  transform-origin: top right;
+  border-radius: 10px;
+  transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+  box-shadow: 0px 15px 10px -15px #111;
+}
+
+.burger-links-visible {
+  transform: scale(1);
+}
+.burger-links-hidden {
+  transform: scale(0);
 }
 
 .bgred {
