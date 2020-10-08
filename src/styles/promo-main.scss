@@ -18,13 +18,20 @@ $input-focus-box-shadow-color: rgba($info, 0.3);
 $family-sans-serif: Lato, sans-serif;
 
 // theme other settings
+$size-1: 2.75rem;
+$size-3: 1.7rem;
+$size-4: 1.3rem;
+$size-5: 1.1rem;
 $input-focus-box-shadow-size: 0 0 0 0.14em;
 $radius: 10px;
 $radius-small: 10px;
 $body-line-height: 1.2;
+$gap: 64px;
 
 // non-bulma variables
 $transition: 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+$text-shadow-menu: 2px 2px 6px rgba($primary, 0.7),
+  -2px -2px 6px rgba($primary, 0.7);
 
 // re-assign bulma variables before import!
 // importing bulma
@@ -32,8 +39,40 @@ $transition: 0.5s cubic-bezier(0.86, 0, 0.07, 1);
 @import '../../node_modules/bulma/bulma.sass';
 
 // adjusting font-size for rem
+
 html {
   font-size: 18px;
+}
+
+.field-fix {
+  @media screen and (min-width: 1408px) and (max-width: 1471px) {
+    line-height: 1.5;
+    height: 2.5rem;
+    font-size: 0.85rem;
+  }
+  @media screen and (max-width: 400px) {
+    line-height: 1.5;
+    height: 2.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+.desktop-menu-fix {
+  text-shadow: $text-shadow-menu;
+  margin-right: 5rem !important;
+  &-last {
+    text-shadow: $text-shadow-menu;
+  }
+  @media screen and (min-width: 1088px) and (max-width: 1279px) {
+    margin-right: 3rem !important;
+  }
+  @media screen and (min-width: 1472px) {
+    margin-right: 6rem !important;
+    font-size: $size-4;
+    &-last {
+      font-size: $size-4;
+    }
+  }
 }
 
 .hero-bg-desktop {

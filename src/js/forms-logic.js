@@ -1,16 +1,13 @@
-// input mask plugin
+// importing input mask plugin
 import IMask from 'imask';
 
-let inputMaskPhone;
+// setting input masks
 const inputMaskPhoneOptions = {
   mask: '+7 (000) 000-00-00',
 };
-let inputMaskDay;
-let inputMaskMonth;
 const inputMaskDayMonthOptions = {
   mask: '00',
 };
-let inputMaskYear;
 const inputMaskYearOptions = {
   mask: '0000',
 };
@@ -21,6 +18,10 @@ const REGEX_NAME = /(?:[A-Za-z|А-Яа-я]+[ \t]+){2}[A-Za-z|А-Яа-я]+/;
 const REGEX_DAY = /^([1-9]|[0-2][0-9]|[3][0-1])$/;
 const REGEX_MONTH = /^([1-9]|[0][1-9]|[0-1][0-2])$/;
 const REGEX_YEAR = /^[0-9]{4}$/;
+
+// Additional constants
+const YEAR_MAX = new Date().getFullYear() - 18;
+const YEAR_MIN = 1900;
 
 // Validation (suitable for all fields)
 const setCssValid = target => {
@@ -60,7 +61,7 @@ const colorWarning = target => {
   target.classList.add('fieldInvalid');
   target.classList.remove('fieldValid');
 };
-const validateField = event => {
+const validateField = (event, inputMask) => {
   let target = event.target;
   if (target.name == 'name') {
     // color validation
@@ -71,8 +72,6 @@ const validateField = event => {
     REGEX_PHONE.test(target.value)
       ? setCssValid(target)
       : setCssInvalid(target);
-    // input mask
-    inputMaskPhone = IMask(target, inputMaskPhoneOptions);
   }
   if (target.name == 'day') {
     // color validation
@@ -97,11 +96,17 @@ const validateField = event => {
       }
       REGEX_MONTH.test(month.value) ? colorSuccess(month) : colorWarning(month);
     }
-    // input mask
-    inputMaskDay = IMask(target, inputMaskDayMonthOptions);
     // reset if wrong
-    if (+target.value <= 0 || +target.value > 31) {
-      inputMaskDay.value = '';
+    if (!'0123'.includes(target.value[0])) {
+      setCssInvalid(target);
+      inputMask.value = '';
+    }
+    if (+target.value < 0 || +target.value > 31) {
+      inputMask.value = '';
+    }
+    if (target.value === '00') {
+      setCssInvalid(target);
+      inputMask.value = '';
     }
   }
   if (target.name == 'month') {
@@ -128,11 +133,17 @@ const validateField = event => {
       }
       REGEX_DAY.test(day.value) ? colorSuccess(day) : colorWarning(day);
     }
-    // input mask
-    inputMaskMonth = IMask(target, inputMaskDayMonthOptions);
     // reset if wrong
-    if (+target.value <= 0 || +target.value > 12) {
-      inputMaskMonth.value = '';
+    if (!'01'.includes(target.value[0])) {
+      setCssInvalid(target);
+      inputMask.value = '';
+    }
+    if (+target.value < 0 || +target.value > 12) {
+      inputMask.value = '';
+    }
+    if (target.value === '00') {
+      setCssInvalid(target);
+      inputMask.value = '';
     }
   }
   if (target.name == 'year') {
@@ -153,12 +164,10 @@ const validateField = event => {
       REGEX_MONTH.test(month.value) ? colorSuccess(month) : colorWarning(month);
       REGEX_DAY.test(day.value) ? colorSuccess(day) : colorWarning(day);
     }
-    // input mask
-    inputMaskYear = IMask(target, inputMaskYearOptions);
     // reset if wrong
-    if (+target.value < 1 || +target.value > new Date().getFullYear() - 18) {
+    if (!'12'.includes(target.value[0])) {
       setCssInvalid(target);
-      inputMaskYear.value = '';
+      inputMask.value = '';
     }
   }
 };
@@ -169,30 +178,35 @@ export const handleFormByID = id => {
   // -- Name handling
   let name = form.elements.namedItem('name');
   name.addEventListener('input', validateField);
-  name.addEventListener('blur', validateField);
   // -- Phone handling
   let phone = form.elements.namedItem('phone');
-  phone.addEventListener('input', validateField);
-  phone.addEventListener('blur', validateField);
+  let inputMaskPhone = IMask(phone, inputMaskPhoneOptions);
+  phone.addEventListener('input', event =>
+    validateField(event, inputMaskPhone)
+  );
   // -- Day handling
   let day = form.elements.namedItem('day');
-  day.addEventListener('input', validateField);
-  day.addEventListener('blur', validateField);
+  let inputMaskDay = IMask(day, inputMaskDayMonthOptions);
+  day.addEventListener('input', event => validateField(event, inputMaskDay));
   // -- Month handling
   let month = form.elements.namedItem('month');
-  month.addEventListener('input', validateField);
-  month.addEventListener('blur', validateField);
+  let inputMaskMonth = IMask(month, inputMaskDayMonthOptions);
+  month.addEventListener('input', event =>
+    validateField(event, inputMaskMonth)
+  );
   // -- Year handling
   let year = form.elements.namedItem('year');
-  year.addEventListener('input', validateField);
-  year.addEventListener('blur', validateField);
+  let inputMaskYear = IMask(year, inputMaskYearOptions);
+  year.addEventListener('input', event => validateField(event, inputMaskYear));
   // - Handling submit action
   form.addEventListener('submit', event => {
     event.preventDefault();
     if (
       !REGEX_NAME.test(name.value) ||
       !REGEX_PHONE.test(phone.value) ||
-      !REGEX_YEAR.test(year.value)
+      !REGEX_YEAR.test(year.value) ||
+      +year.value < YEAR_MIN ||
+      +year.value > YEAR_MAX
     ) {
       if (!REGEX_NAME.test(name.value)) {
         name.focus();
@@ -222,8 +236,13 @@ export const handleFormByID = id => {
           );
         }
       }
-      if (!REGEX_YEAR.test(year.value)) {
+      if (
+        !REGEX_YEAR.test(year.value) ||
+        +year.value < YEAR_MIN ||
+        +year.value > YEAR_MAX
+      ) {
         year.focus();
+        setCssInvalid(year);
         if (year.nextElementSibling) {
           year.nextElementSibling.classList.remove('is-invisible');
           year.nextElementSibling.children[0].classList.remove(
