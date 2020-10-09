@@ -251,7 +251,7 @@ input[type='number'] {
   }
 }
 
-#burger-links {
+#burger-container {
   position: absolute;
   display: flex;
   flex-flow: column nowrap;
@@ -268,12 +268,19 @@ input[type='number'] {
   transition: transform $transition;
   box-shadow: 0px 15px 10px -15px #111;
 }
-.burger-links {
+.burger-container {
   &-visible {
     transform: scale(1);
+    & a {
+      transition: color $transition;
+    }
   }
   &-hidden {
     transform: scale(0);
+    & a {
+      color: $info !important;
+      transition: color $transition;
+    }
   }
 }
 
