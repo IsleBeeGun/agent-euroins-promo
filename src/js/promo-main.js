@@ -1,5 +1,6 @@
 import '../styles/promo-main.scss';
 import './burger-menu';
+import './modal';
 import { handleFormByID } from './forms-logic';
 import zenScroll from 'zenscroll';
 

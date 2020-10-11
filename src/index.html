@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Стань агентом ЕВРОИНС!</title>
+    <meta
+      name="description"
+      content="Стань агентом ЕВРОИНС и начни зарабатывать уже через неделю"
+    />
+    <meta
+      name="keywords"
+      content="зарабаток в страховании, стать страховым агентом"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PROMO PAGE</title>
+
     <meta name="theme-color" content="#35347e" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#009ec1" />
+    <meta name="msapplication-TileColor" content="#009ec1" />
+    <meta name="theme-color" content="#009ec1" />
     <script
       defer
       src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"
     ></script>
+    <script
+      src="https://www.google.com/recaptcha/api.js?render=6LeN1OcUAAAAACGHK_wHWQNG4Sef_49nLH3jF9JQ"
+      async
+      defer
+    ></script>
   </head>
   <body>
+    <!-- Modal -->
+    <div class="modal-backdrop"></div>
+    <div class="modal-window">
+      <span class="modal-exit">&times;</span>
+      <div class="modal-message content"></div>
+    </div>
+
     <!-- Mobile menu -->
     <section
       class="section has-background-info is-hidden-desktop has-text-white"
@@ -70,7 +98,7 @@
     </section>
 
     <!-- Hero -->
-    <section class="hero is-primary hero-bg-desktop pt-4" id="form-desktop-top">
+    <header class="hero is-primary hero-bg-desktop pt-4" id="form-desktop-top">
       <div class="hero-body">
         <div class="container">
           <nav class="level pb-4 is-hidden-touch">
@@ -264,7 +292,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </header>
 
     <!-- Mobile form -->
     <section class="section is-hidden-desktop" id="form-mobile-top">

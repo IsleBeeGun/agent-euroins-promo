@@ -1,5 +1,6 @@
 // importing input mask plugin
 import IMask from 'imask';
+import sendHttpRequest from './sendHttpRequest';
 
 // setting input masks
 const inputMaskPhoneOptions = {
@@ -262,16 +263,83 @@ export const handleFormByID = id => {
       const [lastName, firstName, middleName] = name.value
         .replace(/\s+/g, ' ')
         .split(' ');
-      const body = {
-        recaptchaResponse: '???',
-        firstName,
-        lastName,
-        middleName,
-        birthday,
-        phone: phone.value,
-      };
-      console.log(body);
-      alert('Submitted');
+      const modifiedPhone = phone.value.replace(/\s+/g, '');
+      // v------------------ Getting Recaptcha and sending request -----------------v
+      grecaptcha.ready(function () {
+        // do request for recaptcha token
+        // response is promise with passed token
+        grecaptcha
+          .execute('6LeN1OcUAAAAACGHK_wHWQNG4Sef_49nLH3jF9JQ', {
+            action: 'submit',
+          })
+          .then(function (token) {
+            return {
+              recaptchaResponse: token,
+              firstName,
+              lastName,
+              middleName,
+              birthday,
+              modifiedPhone,
+            };
+          })
+          .then(body =>
+            sendHttpRequest(
+              body,
+              'http://testapi.euro-ins.ru/account/new',
+              'POST'
+            )
+          )
+          .then(res => {
+            console.log('[first res:]', res);
+            document.querySelector('html').style.overflow = 'hidden';
+            document.querySelector(
+              '.modal-message'
+            ).innerHTML = `<h3 class='has-text-success is-size-5'>Заявка на регистрацию успешно отправлена!</h3>`;
+            document
+              .querySelector('.modal-backdrop')
+              .setAttribute('style', 'visibility:visible; opacity: 1;');
+            document
+              .querySelector('.modal-window')
+              .setAttribute('style', 'visibility:visible; opacity: 1;');
+          })
+          .catch(rej => {
+            if (rej === null) {
+              const errorMessageHTML = `<h3 class='has-text-danger is-size-5'>Что-то пошло не так:</h3> <p>Неизвестная ошибка</p>`;
+              document.querySelector(
+                '.modal-message'
+              ).innerHTML = errorMessageHTML;
+            } else {
+              if (rej.errors) {
+                const listOfErrors = [];
+                let listOfErrorsHTML = '';
+                for (const key in rej.errors) {
+                  listOfErrors.push(rej.errors[key]);
+                }
+                for (const error of listOfErrors) {
+                  listOfErrorsHTML += `<li class='mb-2'>${error}</li>`;
+                }
+                const errorMessageHTML = `<h3 class='has-text-danger is-size-5'>Что-то пошло не так:</h3> <ul>${listOfErrorsHTML}</ul>`;
+                document.querySelector(
+                  '.modal-message'
+                ).innerHTML = errorMessageHTML;
+              } else {
+                const errorMessageHTML = `<h3 class='has-text-danger is-size-5'>Что-то пошло не так:</h3> <p>${rej.status}</p>`;
+                document.querySelector(
+                  '.modal-message'
+                ).innerHTML = errorMessageHTML;
+              }
+            }
+
+            document.querySelector('html').style.overflow = 'hidden';
+            document
+              .querySelector('.modal-backdrop')
+              .setAttribute('style', 'visibility:visible; opacity: 1;');
+            document
+              .querySelector('.modal-window')
+              .setAttribute('style', 'visibility:visible; opacity: 1;');
+          });
+      });
+      // ^------------------ Getting Recaptcha and sending request -----------------^
     }
   });
 

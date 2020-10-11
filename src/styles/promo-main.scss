@@ -49,6 +49,58 @@ html {
   font-size: 18px;
 }
 
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
+.modal {
+  &-backdrop {
+    transition: visibility $transition-quick, opacity $transition-quick;
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba($info, 0.7);
+    z-index: 50;
+  }
+  &-window {
+    transition: visibility $transition, opacity $transition;
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    padding: 2rem;
+    padding-bottom: 4rem;
+    top: 30vh;
+    left: calc(50% - 15rem);
+    width: 30rem;
+    background: white;
+    box-shadow: 0 0 10px darken($info, 20%);
+    //box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    z-index: 100;
+    border-radius: $radius;
+    @media screen and (max-width: 559px) {
+      top: 5vh;
+      left: calc(50% - 8rem);
+      width: 16rem;
+    }
+  }
+  &-exit {
+    cursor: pointer;
+    align-self: flex-end;
+    font-size: 2rem;
+    line-height: 1rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+}
+
 .field-fix {
   @media screen and (min-width: 1408px) and (max-width: 1471px) {
     line-height: 1.5;
