@@ -4,7 +4,7 @@ import sendHttpRequest from './sendHttpRequest';
 
 // setting input masks
 const inputMaskPhoneOptions = {
-  mask: '+7 (000) 000-00-00',
+  mask: '+0 (000) 000-00-00',
 };
 const inputMaskDayMonthOptions = {
   mask: '00',
@@ -15,7 +15,7 @@ const inputMaskYearOptions = {
 
 // Regular Expressions
 const REGEX_PHONE = /^\+\d{1,2}\s+?\(\d{3,5}\)\s+?\d{1,3}-\d{2}-\d{2}$/;
-const REGEX_NAME = /(?:[A-Za-z|А-Яа-я]+[ \t]+){2}[A-Za-z|А-Яа-я]+/;
+const REGEX_NAME = /^(?:[A-Za-z|А-Яа-яёЁ]+[ \t]+){2}[A-Za-z|А-Яа-яёЁ]+$/;
 const REGEX_DAY = /^([1-9]|[0-2][0-9]|[3][0-1])$/;
 const REGEX_MONTH = /^([1-9]|[0][1-9]|[0-1][0-2])$/;
 const REGEX_YEAR = /^[0-9]{4}$/;
@@ -25,7 +25,7 @@ const YEAR_MAX = new Date().getFullYear() - 18;
 const YEAR_MIN = 1900;
 
 // Validation (suitable for all fields)
-const setCssValid = target => {
+const setCssValid = (target) => {
   if (target.nextElementSibling) {
     target.nextElementSibling.children[0].classList.remove(
       'fa-check',
@@ -40,25 +40,25 @@ const setCssValid = target => {
   showCheck(target);
   colorSuccess(target);
 };
-const setCssInvalid = target => {
+const setCssInvalid = (target) => {
   hideCheck(target);
   colorWarning(target);
 };
-const showCheck = target => {
+const showCheck = (target) => {
   if (target.nextElementSibling) {
     target.nextElementSibling.classList.remove('is-invisible');
   }
 };
-const hideCheck = target => {
+const hideCheck = (target) => {
   if (target.nextElementSibling) {
     target.nextElementSibling.classList.add('is-invisible');
   }
 };
-const colorSuccess = target => {
+const colorSuccess = (target) => {
   target.classList.add('fieldValid');
   target.classList.remove('fieldInvalid');
 };
-const colorWarning = target => {
+const colorWarning = (target) => {
   target.classList.add('fieldInvalid');
   target.classList.remove('fieldValid');
 };
@@ -73,6 +73,13 @@ const validateField = (event, inputMask) => {
     REGEX_PHONE.test(target.value)
       ? setCssValid(target)
       : setCssInvalid(target);
+    // modify if wrong
+    if (target.value.substr(0, 2) !== '+7') {
+      inputMask.value = target.value.replace(/^\+\d{1,2}/, '+7');
+      REGEX_PHONE.test(target.value)
+        ? setCssValid(target)
+        : setCssInvalid(target);
+    }
   }
   if (target.name == 'day') {
     // color validation
@@ -173,7 +180,7 @@ const validateField = (event, inputMask) => {
   }
 };
 
-export const handleFormByID = id => {
+export const handleFormByID = (id) => {
   // -- Getting form by id
   const form = document.querySelector(`#${id}`);
   // -- Name handling
@@ -182,25 +189,27 @@ export const handleFormByID = id => {
   // -- Phone handling
   let phone = form.elements.namedItem('phone');
   let inputMaskPhone = IMask(phone, inputMaskPhoneOptions);
-  phone.addEventListener('input', event =>
+  phone.addEventListener('input', (event) =>
     validateField(event, inputMaskPhone)
   );
   // -- Day handling
   let day = form.elements.namedItem('day');
   let inputMaskDay = IMask(day, inputMaskDayMonthOptions);
-  day.addEventListener('input', event => validateField(event, inputMaskDay));
+  day.addEventListener('input', (event) => validateField(event, inputMaskDay));
   // -- Month handling
   let month = form.elements.namedItem('month');
   let inputMaskMonth = IMask(month, inputMaskDayMonthOptions);
-  month.addEventListener('input', event =>
+  month.addEventListener('input', (event) =>
     validateField(event, inputMaskMonth)
   );
   // -- Year handling
   let year = form.elements.namedItem('year');
   let inputMaskYear = IMask(year, inputMaskYearOptions);
-  year.addEventListener('input', event => validateField(event, inputMaskYear));
+  year.addEventListener('input', (event) =>
+    validateField(event, inputMaskYear)
+  );
   // - Handling submit action
-  form.addEventListener('submit', event => {
+  form.addEventListener('submit', (event) => {
     event.preventDefault();
     if (
       !REGEX_NAME.test(name.value) ||
@@ -257,13 +266,16 @@ export const handleFormByID = id => {
         }
       }
     } else {
-      const birthday = `${day.value.length > 1 ? day.value : '0' + day.value}.${
+      // const birthday = `${day.value.length > 1 ? day.value : '0' + day.value}.${
+      //   month.value.length > 1 ? month.value : '0' + month.value
+      // }.${year.value}`;
+      const birthday = `${year.value}-${
         month.value.length > 1 ? month.value : '0' + month.value
-      }.${year.value}`;
+      }-${day.value.length > 1 ? day.value : '0' + day.value}`;
       const [lastName, firstName, middleName] = name.value
         .replace(/\s+/g, ' ')
         .split(' ');
-      const modifiedPhone = phone.value.replace(/\s+/g, '');
+      const modifiedPhone = phone.value.replace(/\D+/g, '').slice(-10);
       // v------------------ Getting Recaptcha and sending request -----------------v
       grecaptcha.ready(function () {
         // do request for recaptcha token
@@ -279,22 +291,29 @@ export const handleFormByID = id => {
               lastName,
               middleName,
               birthday,
-              modifiedPhone,
+              phone: modifiedPhone,
             };
           })
-          .then(body =>
+          .then((body) =>
             sendHttpRequest(
               body,
-              'http://testapi.euro-ins.ru/account/new',
+              'https://agent.euro-ins.ru/account/new',
               'POST'
             )
           )
-          .then(res => {
+          .then((res) => {
             console.log('[first res:]', res);
             document.querySelector('html').style.overflow = 'hidden';
             document.querySelector(
               '.modal-message'
-            ).innerHTML = `<h3 class='has-text-success is-size-5'>Заявка на регистрацию успешно отправлена!</h3>`;
+            ).innerHTML = `<h3 class='has-text-success is-size-5'>Заявка на регистрацию успешно отправлена!</h3>  
+            <p>Запрос на регистрацию принят. Пароль для входа кабинет отправлен по SMS на номер, указанный при регистрации.</p>
+            <br>
+            <p style="text-align: center">
+              <a href="https://agent.euro-ins.ru/login" class="button is-warning is-normal has-text-weight-bold is-fullwidth-sm">
+                Войти в личный кабинет
+              </a>
+            <p>`;
             document
               .querySelector('.modal-backdrop')
               .setAttribute('style', 'visibility:visible; opacity: 1;');
@@ -302,7 +321,7 @@ export const handleFormByID = id => {
               .querySelector('.modal-window')
               .setAttribute('style', 'visibility:visible; opacity: 1;');
           })
-          .catch(rej => {
+          .catch((rej) => {
             if (rej === null) {
               const errorMessageHTML = `<h3 class='has-text-danger is-size-5'>Что-то пошло не так:</h3> <p>Неизвестная ошибка</p>`;
               document.querySelector(
